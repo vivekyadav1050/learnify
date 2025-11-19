@@ -24,7 +24,7 @@ app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
 
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'viveksinghald1050@gmail.com'   # your Gmail
 app.config['MAIL_PASSWORD'] = 'okqf idxe sfhw bauj'          # use Gmail App Password
@@ -1097,3 +1097,4 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
