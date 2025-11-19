@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styeforregrestationforstudent.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>Learnify</span>
+        </div>
+        <h1>Student Registration</h1>
+        <p>Create your account to get started</p>
+      </div>
+
+      <!-- Flash messages -->
+      <script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              alert("{{ message }}");
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </script>
+
+      <div class="form-container">
+        <form action="/regrestrationforstudent" method="post">
+          <div class="form-row">
+            <div class="input-group">
+              <label for="student-registration-no">Registration No</label>
+              <div class="input-with-icon">
+                <i class="fas fa-id-card"></i>
+                <input type="text" id="student-registration-no" name="registration_no" placeholder="Enter Registration No" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="student-name">Full Name</label>
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="student-name" name="name" placeholder="Your Name" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="student-email">Email</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="student-email" name="email" placeholder="Your Email" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label for="student-password">Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="student-password" name="password" placeholder="Choose Password" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="student-confirm-password">Confirm Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="student-confirm-password" name="confirm_password" placeholder="Confirm Password" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label for="student-section">Section</label>
+              <div class="input-with-icon">
+                <i class="fas fa-users"></i>
+                <input type="text" id="student-section" name="section" placeholder="eg.. K23CH" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="student-year">Year</label>
+              <div class="input-with-icon">
+                <i class="fas fa-calendar-alt"></i>
+                <select id="student-year" name="year" required>
+                  <option value="">Select Year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span>Register as Student</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <p>Want to register as an instructor? <a href="/regrestrationforinstructor">Click here</a></p>
+          <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

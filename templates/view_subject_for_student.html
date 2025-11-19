@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/styleforstudentsectiondashboard.css') }}">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+  <!-- Menu toggle -->
+  <input type="checkbox" id="menu-toggle" />
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <label for="menu-toggle" class="back-btn">
+        <i class="fas fa-times"></i> Close
+      </label>
+    </div>
+    <div class="sidebar-links">
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-user-edit"></i> Edit Profile
+      </a>
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-chart-line"></i> Progress
+      </a>
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-info-circle"></i> About Us
+      </a>
+      <a href="/logout" class="sidebar-link logout-link">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Welcome, {{ student_name }}!</h1>
+          <p>Student Dashboard</p>
+        </div>
+      </div>
+      <label for="menu-toggle" class="menu-icon">
+        <i class="fas fa-bars"></i>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="container">
+    <div class="page-header">
+      <div class="header-text">
+        <h2>My Subjects</h2>
+        <p>Section: {{ section_name }}</p>
+      </div>
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ subjects|length }}</span>
+            <span class="stat-label">Subjects</span>
+          </div>
+        </div>
+   
+      </div>
+    </div>
+
+    <div class="subject-grid">
+      {% if subjects %}
+        {% for subject in subjects %}
+          <div class="subject-card">
+            <div class="subject-header">
+              <div class="subject-icon">
+                <i class="fas fa-{{ ['book', 'calculator', 'flask', 'code', 'globe', 'chart-bar'][loop.index0 % 6] }}"></i>
+              </div>
+              <div class="subject-actions">
+                <button class="action-btn">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+            </div>
+            <div class="subject-body">
+              <h3 class="subject-title">{{ subject[1] }}</h3>
+              <p class="subject-description">Explore questions and assignments for this subject</p>
+              
+              <div class="subject-progress">
+          
+              </div>
+            </div>
+            <div class="subject-footer">
+              <div class="subject-meta">
+                
+              </div>
+              <a href="{{ url_for('view_question_for_student', subject_id=subject[0], section_name=section_name, subject_name=subject[1]) }}" 
+                 class="enter-btn">
+                Enter <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-subjects">
+          <div class="no-subjects-icon">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <h3>No Subjects Found</h3>
+          <p>There are no subjects available for your section at the moment.</p>
+          <button class="retry-btn">
+            <i class="fas fa-redo"></i> Refresh
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+  <script>
+    // Close sidebar on mobile after click
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('menu-toggle').checked = false;
+        }
+      });
+    });
+
+    // Add some interactive elements
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        alert('More options coming soon!');
+      });
+    });
+  </script>
+</body>
+</html>

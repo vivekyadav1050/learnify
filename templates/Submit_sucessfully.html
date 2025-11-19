@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Submitted Successfully</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/submit_sucessfully_style.css') }}">
+</head>
+<body>
+  <div class="success-container">
+    <div class="checkmark">
+      ✓
+    </div>
+    <h1>Test Submitted Successfully!</h1>
+    <p>Your answers have been saved successfully.</p>
+
+
+    <button onclick="goBack()">Logout</button>
+  </div>
+
+  <script>
+    function goBack() {
+        window.location.href = "{{ url_for('logout') }}";
+    }
+  </script>
+</body>
+</html>

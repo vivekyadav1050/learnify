@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ TEST_NAME }}</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/run_test_live_style.css') }}" />
+
+</head>
+<body>
+  {% if is_done %}
+    <div class="container">
+      <div class="submitted-message">
+        <i class="fas fa-check-circle"></i>
+        <h2>Test Successfully Submitted</h2>
+        <p>Test: <b>{{ TEST_NAME }}</b></p>
+        <p>Student: <b>{{ STUDENT_NAME }}</b> ({{ STUDENT_REG_NO }})</p>
+      </div>
+    </div>
+  {% else %}
+    <div class="container">
+      <div class="header">
+        <div class="test-info">
+          <h1 id="testname">Loading Test...</h1>
+          <p id="student"></p>
+        </div>
+        <div class="timer-container">
+          <div class="timer-label">TIME REMAINING</div>
+          <div id="timer">00:00</div>
+        </div>
+      </div>
+
+      <div class="warning-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Do not switch tabs during the test. Multiple violations will result in automatic submission.</span>
+      </div>
+
+      <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+        <div class="test-content">
+          <div class="question-counter">
+            <div class="question-number">Question <span id="current-q">1</span> of <span id="total-q">0</span></div>
+            <div class="progress-container">
+              <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+          
+          <div id="questions"></div>
+          
+          <div class="navigation">
+            <button type="button" class="btn btn-prev" id="prevBtn" onclick="prevQuestion()">
+              <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn btn-next" id="nextBtn" onclick="nextQuestion()">
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button type="submit" class="btn btn-submit" id="submitBtn" style="display:none;">
+              <i class="fas fa-paper-plane"></i> Submit Test
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+
+
+
+      
+      // All your original JavaScript code remains exactly the same
+      {% if not is_done %}
+      const data = {
+        test_id: {{ TEST_ID }},
+        subject_id: {{ SUBJECT_ID }},
+        testname: "{{ TEST_NAME }}",
+        student_name: "{{ STUDENT_NAME }}",
+        student_reg_no: "{{ STUDENT_REG_NO }}",
+        duration: {{ DURATION }},
+        questions: {{ QUESTIONS | tojson }}
+      };
+
+      let duration = data.duration * 60;
+      let currentQuestion = 0;
+      let tabSwitchCount = 0;
+      let timerInterval;
+
+      document.addEventListener('copy', e => e.preventDefault());
+      document.addEventListener('cut', e => e.preventDefault());
+      document.addEventListener('paste', e => e.preventDefault());
+      document.addEventListener('contextmenu', e => e.preventDefault());
+
+      document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+          tabSwitchCount++;
+          localStorage.setItem("tabSwitchCount", tabSwitchCount);
+          alert("⚠️ Warning! Do not switch tabs. (" + tabSwitchCount + "/3)");
+          if (tabSwitchCount >= 3) {
+            alert("❌ You switched tabs 3 times. Test will be submitted automatically.");
+            submitTest();
+          }
+        }
+      });
+
+      function loadTest() {
+        document.getElementById("testname").innerText = data.testname;
+        document.getElementById("student").innerText =
+          "Student: " + data.student_name + " (" + data.student_reg_no + ")";
+        document.getElementById("total-q").innerText = data.questions.length;
+        updateProgress();
+        renderQuestion();
+        startTimer();
+      }
+
+      function renderQuestion() {
+        const q = data.questions[currentQuestion];
+        const container = document.getElementById("questions");
+        container.innerHTML = `
+          <div class="question-title">${q[1]}</div>
+          <div class="options-container">
+            <label class="option-label">
+              <input type="radio" name="q${q[0]}" value="1">
+              <span class="option-text">${q[2]}</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q${q[0]}" value="2">
+              <span class="option-text">${q[3]}</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q${q[0]}" value="3">
+              <span class="option-text">${q[4]}</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q${q[0]}" value="4">
+              <span class="option-text">${q[5]}</span>
+            </label>
+          </div>
+        `;
+        
+        // Add event listeners for option selection styling
+        const optionLabels = document.querySelectorAll('.option-label');
+        optionLabels.forEach(label => {
+          label.addEventListener('click', function() {
+            optionLabels.forEach(l => l.classList.remove('selected'));
+            this.classList.add('selected');
+          });
+        });
+        
+        restoreAnswer();
+        updateButtons();
+        updateProgress();
+      }
+
+      function updateProgress() {
+        document.getElementById("current-q").innerText = currentQuestion + 1;
+        const progress = ((currentQuestion + 1) / data.questions.length) * 100;
+        document.getElementById("progress-bar").style.width = `${progress}%`;
+      }
+
+      function restoreAnswer() {
+        const qid = data.questions[currentQuestion][0];
+        const saved = sessionStorage.getItem("answer_" + qid);
+        if (saved) {
+          const input = document.querySelector(`input[name="q${qid}"][value="${saved}"]`);
+          if (input) {
+            input.checked = true;
+            input.parentElement.classList.add('selected');
+          }
+        }
+      }
+
+      function saveAnswer() {
+        const qid = data.questions[currentQuestion][0];
+        const selected = document.querySelector(`input[name="q${qid}"]:checked`);
+        if (selected) {
+          sessionStorage.setItem("answer_" + qid, selected.value);
+        }
+      }
+
+      function nextQuestion() {
+        saveAnswer();
+        if (currentQuestion < data.questions.length - 1) {
+          currentQuestion++;
+          renderQuestion();
+        }
+      }
+
+      function prevQuestion() {
+        saveAnswer();
+        if (currentQuestion > 0) {
+          currentQuestion--;
+          renderQuestion();
+        }
+      }
+
+      function updateButtons() {
+        document.getElementById("prevBtn").style.display =
+          currentQuestion === 0 ? "none" : "flex";
+        document.getElementById("nextBtn").style.display =
+          currentQuestion === data.questions.length - 1 ? "none" : "flex";
+        document.getElementById("submitBtn").style.display =
+          currentQuestion === data.questions.length - 1 ? "flex" : "none";
+      }
+
+      function startTimer() {
+        const timer = document.getElementById("timer");
+        timerInterval = setInterval(() => {
+          if (duration <= 0) {
+            clearInterval(timerInterval);
+            alert("⏰ Time's up! Test will be auto-submitted.");
+            submitTest();
+            return;
+          }
+          let min = Math.floor(duration / 60);
+          let sec = duration % 60;
+          timer.innerText = `${min}:${sec.toString().padStart(2, '0')}`;
+          duration--;
+        }, 1000);
+      }
+
+      async function submitTest() {
+        clearInterval(timerInterval);
+        saveAnswer();
+
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+        const responseList = [];
+        data.questions.forEach(q => {
+          const saved = sessionStorage.getItem("answer_" + q[0]);
+          const selectedOption = saved ? parseInt(saved) : 0;
+          responseList.push([q[0], selectedOption]);
+        });
+
+        try {
+          const res = await fetch(`/submit_student_response_test/${data.test_id}/${data.subject_id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(responseList)
+          });
+
+          if (res.redirected) {
+            window.location.href = res.url;
+            return;
+          }
+
+          const result = await res.json();
+
+          if (result.error) {
+            alert("❌ " + result.error);
+            return;
+          }
+
+          if (result.message) {
+            alert(result.message);
+            if (result.redirect_url) {
+              window.location.href = result.redirect_url;
+            }
+          }
+        } catch (error) {
+          console.error("Submission failed:", error);
+          alert("❌ Failed to submit test. Please check your network.");
+        }
+
+        localStorage.removeItem("tabSwitchCount");
+        sessionStorage.clear();
+      }
+
+      window.onload = loadTest;
+      {% endif %}
+    </script>
+  {% endif %}
+</body>
+</html>

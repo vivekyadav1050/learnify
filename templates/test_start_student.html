@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Instructions | ExamPro</title>
+
+  <!-- Boxicons -->
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Custom Styles -->
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/test_start_student_style.css') }}"
+  />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <i class="bx bxs-graduation"></i>
+      <span>ExamPro</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Test Instructions</h1>
+        <p>Please read all instructions carefully before starting</p>
+      </div>
+    </div>
+
+    <!-- Instructions Card -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-icon">
+          <i class="bx bx-file"></i>
+        </div>
+        <div class="status-badge active">Ready to Start</div>
+      </div>
+
+      <div class="test-info">
+        <h3>General Knowledge Test</h3>
+
+        <div class="test-details">
+          <div class="detail-item">
+            <i class="bx bx-time"></i>
+            <span class="detail-label">Duration:</span>
+            <span>60 minutes</span>
+          </div>
+          <div class="detail-item">
+            <i class="bx bx-list-ul"></i>
+            <span class="detail-label">Questions:</span>
+            <span>30</span>
+          </div>
+          <div class="detail-item">
+            <i class="bx bx-shield-alt"></i>
+            <span class="detail-label">Security:</span>
+            <span>Strict Monitoring</span>
+          </div>
+        </div>
+
+        <!-- Instructions List -->
+        <div class="instructions-list">
+          <h4>Important Instructions:</h4>
+          <ul>
+            <li>
+              <i class="bx bx-play-circle"></i>
+              <span
+                >Once you click <strong>Start Test</strong>, the test will begin
+                immediately</span
+              >
+            </li>
+            <li>
+              <i class="bx bx-tab"></i>
+              <span>Do not switch tabs or minimize the browser window</span>
+            </li>
+            <li>
+              <i class="bx bx-error"></i>
+              <span
+                >You will receive <strong>3 warnings</strong> for tab
+                switching</span
+              >
+            </li>
+            <li>
+              <i class="bx bx-alarm"></i>
+              <span
+                >After 3 warnings, your test will be auto-submitted</span
+              >
+            </li>
+            <li>
+              <i class="bx bx-help-circle"></i>
+              <span
+                >The test contains
+                <strong>30 multiple-choice questions</strong></span
+              >
+            </li>
+            <li>
+              <i class="bx bx-time-five"></i>
+              <span
+                >You have <strong>60 minutes</strong> to complete the entire
+                test</span
+              >
+            </li>
+            <li>
+              <i class="bx bx-navigation"></i>
+              <span>Use the navigation buttons to move between questions</span>
+            </li>
+            <li>
+              <i class="bx bx-save"></i>
+              <span>Answers are auto-saved as you progress</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Warning Box -->
+        <div class="warning-box">
+          <i class="bx bx-info-circle"></i>
+          <div>
+            <strong>Important:</strong> Any attempt to cheat will result in
+            immediate test termination.
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-actions">
+          <div class="start-button-container">
+            <button
+              onclick="startTest()"
+              class="btn-action btn-primary"
+              role="button"
+              aria-label="Start the test"
+            >
+              <i class="bx bx-play"></i> Start Test Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function startTest() {
+      if (!confirm("Are you ready to start the test?")) return;
+
+      const btn = document.querySelector(".btn-primary");
+      btn.innerHTML =
+        '<i class="bx bx-loader-circle bx-spin"></i> Starting...';
+      btn.disabled = true;
+
+      // Simulate loading delay before redirect
+      setTimeout(() => {
+        window.location.href = "{{ url_for('start_test_now_student', test_id=test_id, subject_id=subject_id) }}";
+      }, 1500);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const listItems = document.querySelectorAll(".instructions-list li");
+      listItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add("fade-in");
+      });
+
+      const startButton = document.querySelector(".btn-primary");
+
+      // Click feedback
+      startButton.addEventListener("click", () => {
+        startButton.style.transform = "scale(0.95)";
+        setTimeout(() => (startButton.style.transform = ""), 150);
+      });
+
+      // Keyboard accessibility
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          startButton.focus();
+        }
+      });
+
+      // Auto-scroll button into view
+      setTimeout(() => {
+        startButton.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

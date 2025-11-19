@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learnify - Interactive Learning & Testing Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mainhomepage.css')}}">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="nav-wrapper">
+        <div class="logo">Learnify</div>
+        <nav class="nav-links">
+          <a href="#" class="nav-link">Home</a>
+          <a href="#" class="nav-link">Features</a>
+          <a href="#" class="nav-link">Pricing</a>
+          <a href="{{ url_for('aboutus') }}"  class="nav-link">About</a>
+          <a href="{{ url_for('login') }}" class="nav-link login-btn">Log In</a>
+        </nav>
+        <button class="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Interactive Learning & Testing Platform</h1>
+        <p class="hero-description">Learnify empowers educators to create engaging tests and helps students track their progress with topic mastery and peer comparison.</p>
+        <div class="hero-buttons">
+<a href="https://wa.me/9335960949?text=Hi%20Sue!%20I%20want%20to%20get%20started%20with%20Learnify."
+   target="_blank"
+   class="btn btn-primary btn-whatsapp">
+   <i class="fab fa-whatsapp"></i> Get Started with Learnify
+</a>
+          <a href="#" class="btn btn-secondary">Watch Demo <i class="fas fa-play-circle"></i></a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">15K+</div>
+            <div class="stat-label">Active Users</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">2K+</div>
+            <div class="stat-label">Tests Created</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="visual-card card-1">
+          <div class="card-header">
+            <div class="card-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3>Test Completed!</h3>
+            <p>Mathematics - Algebra Basics</p>
+            <div class="progress">
+              <div class="progress-bar" style="width: 85%"></div>
+            </div>
+            <div class="score">Score: 85%</div>
+          </div>
+        </div>
+        <div class="visual-card card-2">
+          <div class="card-header">
+            <div class="card-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3>Topic Progress</h3>
+            <div class="stats">
+              <div class="stat-item">
+                <span>Topics Read:</span>
+                <span>18/25</span>
+              </div>
+              <div class="stat-item">
+                <span>Mastery Level:</span>
+                <span>72%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Designed for Interactive Learning</h2>
+        <p>Learnify provides specialized tools for both students and educators</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h3>For Students</h3>
+          <p>Track your learning progress, mark topics as read, attempt tests, and compare your performance with peers.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Topic-based learning</li>
+            <li><i class="fas fa-check"></i> Interactive test taking</li>
+            <li><i class="fas fa-check"></i> Peer comparison leaderboard</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <h3>For Educators</h3>
+          <p>Create customized tests, track student performance, and get detailed analytics on test results.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Custom test creation</li>
+            <li><i class="fas fa-check"></i> Student performance tracking</li>
+            <li><i class="fas fa-check"></i> Detailed result analytics</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h3>Leaderboard & Competition</h3>
+          <p>Foster healthy competition with peer-to-peer comparison and track your ranking across various subjects.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Real-time leaderboard</li>
+            <li><i class="fas fa-check"></i> Subject-wise rankings</li>
+            <li><i class="fas fa-check"></i> Achievement badges</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Section -->
+  <section class="info-section">
+    <div class="container">
+      <div class="info-content">
+        <h2>Why Choose Learnify?</h2>
+        <p>
+          Learnify is an advanced platform built to help <b>students</b> and <b>educators</b>
+          create an interactive learning environment. With our comprehensive testing system and
+          progress tracking, learning becomes more engaging and effective.
+        </p>
+
+        <div class="info-points">
+          <div class="info-point">
+            <div class="point-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="point-content">
+              <h4>For Students</h4>
+              <p>Students can register, access learning materials organized by topics, mark topics as read, attempt tests created by educators, and track their performance through detailed analytics and leaderboards.</p>
+            </div>
+          </div>
+
+          <div class="info-point">
+            <div class="point-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="point-content">
+              <h4>For Educators</h4>
+              <p>Educators can create customized tests with various question types, assign them to students, and get comprehensive results after test completion. They can track individual student progress and class performance.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-highlight">
+          <p>
+            Learnify is not just a testing platform—it's a <b>complete learning ecosystem</b>.
+            Whether you're preparing for exams, conducting classroom assessments, or tracking
+            self-paced learning, Learnify ensures that both students and educators stay connected
+            and motivated through interactive features and healthy competition.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>How Learnify Works</h2>
+        <p>Simple steps to enhance your teaching and learning experience</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <h3>1. Study Topics</h3>
+          <p>Students access learning materials organized by topics and mark them as read to track their progress.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <h3>2. Create & Take Tests</h3>
+          <p>Educators create customized tests while students attempt them within the platform.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3>3. View Results & Rankings</h3>
+          <p>Get detailed test results and compare performance with peers through the interactive leaderboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="get-started">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Transform Learning?</h2>
+        <p>Join thousands of students and educators already using Learnify</p>
+        
+        <div class="terms-box">
+          <div class="checkbox-container">
+            <input type="checkbox" id="agree">
+            <label for="agree">
+              I agree to the <a href="#" class="terms-link">Terms & Conditions</a>
+            </label>
+          </div>
+          <a href="{{ url_for('login') }}" class="btn btn-primary btn-large" id="continue-btn">Continue to Platform</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Learnify</h3>
+          <p>The interactive platform for learning, testing, and tracking progress.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contact Us</h4>
+          <p><i class="fas fa-envelope"></i> Email: <a href="mailto:support@learnify.com">viveksinghald1050@gmail.com</a></p>
+          <p><i class="fas fa-phone"></i> Phone: +91 9335960949</p>
+          <p><i class="fas fa-map-marker-alt"></i> Location: India</p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="#">Home</a>
+          <a href="#">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+        </div>
+
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <a href="#">Documentation</a>
+          <a href="#">Blog</a>
+          <a href="#">Tutorials</a>
+          <a href="#">Community</a>
+          <a href="#">Support</a>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        © 2025 Learnify. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Enable continue button when checkbox is checked
+    document.getElementById('agree').addEventListener('change', function() {
+      document.getElementById('continue-btn').classList.toggle('btn-disabled', !this.checked);
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Add fade-in animation to elements as they come into view
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card, .info-section, .cta-section').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

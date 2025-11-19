@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Questions for Test</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/add_question_for_test_stye.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <div class="container">
+    <header class="form-header">
+      <h1>Add Questions</h1>
+      <p class="subtitle">Create multiple choice questions with ease</p>
+    </header>
+
+    <!-- ✅ FORM sends data directly to Flask -->
+    <form id="questionForm" method="POST" action="{{ url_for('add_questions_for_test', test_id=test_id, subject_id=subject_id,section_name=section_name) }}">
+      <div id="questionsContainer">
+        <!-- Question blocks will be added here -->
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="addQuestion" class="btn btn-secondary">
+          <i class='bx bx-plus'></i>
+          Add Another Question
+        </button>
+        <button type="submit" id="submitBtn" class="btn btn-primary">
+          <i class='bx bx-check'></i>
+          Submit All Questions
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let questionCount = 0;
+
+    function createQuestionBlock() {
+      questionCount++;
+      const block = document.createElement('div');
+      block.classList.add('question-block');
+
+      block.innerHTML = `
+        <div class="question-header">
+          <div class="question-number">Q${questionCount}</div>
+          <h3>Question ${questionCount}</h3>
+          <button type="button" class="remove-question" ${questionCount === 1 ? 'disabled' : ''}>
+            <i class='bx bx-trash'></i>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Question Text</label>
+          <input type="text" name="question_text[]" placeholder="Enter your question here..." required>
+        </div>
+
+        <div class="options-grid">
+          <div class="form-group">
+            <label class="form-label">Option 1</label>
+            <input type="text" name="option_1[]" placeholder="First option" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Option 2</label>
+            <input type="text" name="option_2[]" placeholder="Second option" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Option 3</label>
+            <input type="text" name="option_3[]" placeholder="Third option" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Option 4</label>
+            <input type="text" name="option_4[]" placeholder="Fourth option" required>
+          </div>
+        </div>
+
+        <div class="form-group correct-answer-group">
+          <label class="form-label">Correct Answer</label>
+          <select name="correct_option[]" required>
+            <option value="">Select the correct option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+          </select>
+          <div class="select-arrow">
+            <i class='bx bx-chevron-down'></i>
+          </div>
+        </div>
+      `;
+
+      // remove question
+      const removeBtn = block.querySelector('.remove-question');
+      removeBtn.addEventListener('click', () => {
+        if (questionCount > 1) {
+          block.remove();
+          questionCount--;
+          updateQuestionNumbers();
+        }
+      });
+
+      return block;
+    }
+
+    function updateQuestionNumbers() {
+      const blocks = document.querySelectorAll('.question-block');
+      blocks.forEach((block, i) => {
+        const number = block.querySelector('.question-number');
+        const title = block.querySelector('h3');
+        number.textContent = `Q${i + 1}`;
+        title.textContent = `Question ${i + 1}`;
+        block.querySelector('.remove-question').disabled = i === 0;
+      });
+    }
+
+    // add first question by default
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('questionsContainer').appendChild(createQuestionBlock());
+    });
+
+    document.getElementById('addQuestion').addEventListener('click', () => {
+      document.getElementById('questionsContainer').appendChild(createQuestionBlock());
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Test | Instructor</title>
+
+  <!-- Link to your custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/add_test_instructor_style.css') }}" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header-container">
+    <header>
+      <div class="header-content">
+        <div class="logo-section">
+          <i class='bx bx-test-tube'></i>
+          <div class="header-text">
+            <h1>Test Management</h1>
+            <p>Enter details for a new test</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Add Test Details</h2>
+        <p>Fill out the information below to create a new test.</p>
+      </div>
+
+      <div class="form-content">
+        <!-- ✅ Flask Form Setup -->
+        <form class="question-form" 
+              method="POST" 
+              action="{{ url_for('add_test_instructor', subject_id=subject_id,section_name=section_name) }}">
+
+          <div class="form-group">
+            <label class="form-label" for="test_name">
+              <i class='bx bx-rename'></i> Test Name
+            </label>
+            <input type="text" id="test_name" name="test_name" class="form-input" 
+                   placeholder="Enter test name" maxlength="100" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="start_time">
+              <i class='bx bx-time'></i> Start Time
+            </label>
+            <input type="datetime-local" id="start_time" name="start_time" 
+                   class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="end_time">
+              <i class='bx bx-timer'></i> End Time
+            </label>
+            <input type="datetime-local" id="end_time" name="end_time" 
+                   class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="duration_minutes">
+              <i class='bx bx-stopwatch'></i> Duration (Minutes)
+            </label>
+            <input type="number" id="duration_minutes" name="duration_minutes" 
+                   class="form-input" placeholder="Enter duration" min="1" required>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="add-btn">
+              <i class='bx bx-plus'></i> Submit
+            </button>
+            <a href="{{ url_for('testdashboad_for_instructor', subject_id=subject_id,section_name=section_name) }}" class="back-btn">
+              <i class='bx bx-arrow-back'></i> Back
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional JS to auto-fill duration -->
+  <script>
+    const start = document.getElementById("start_time");
+    const end = document.getElementById("end_time");
+    const duration = document.getElementById("duration_minutes");
+
+    function updateDuration() {
+      if (start.value && end.value) {
+        const startDate = new Date(start.value);
+        const endDate = new Date(end.value);
+        const diff = (endDate - startDate) / (1000 * 60); // convert ms → minutes
+        if (diff > 0) duration.value = Math.round(diff);
+      }
+    }
+
+    start.addEventListener("change", updateDuration);
+    end.addEventListener("change", updateDuration);
+  </script>
+</body>
+</html>

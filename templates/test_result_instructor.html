@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ testname }} - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test_result_instructor.css') }}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-icon">
+                <i class='bx bx-menu'></i>
+            </div>
+            <div class="logo">
+                <i class='bx bxs-graduation'></i>
+                <span>EduPortal</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="avatar">JD</div>
+        </div>
+    </header>
+
+    <!-- Menu Toggle -->
+    <input type="checkbox" id="menu-toggle">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="avatar">JD</div>
+                <div class="user-details">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Instructor</div>
+                </div>
+            </div>
+            <label for="menu-toggle" class="close-menu">
+                <i class='bx bx-x'></i>
+            </label>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class='bx bxs-dashboard'></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class='bx bxs-book'></i>
+                <span>Tests</span>
+            </a>
+            <a href="#" class="menu-item active">
+                <i class='bx bxs-bar-chart-alt-2'></i>
+                <span>Results</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class='bx bxs-user'></i>
+                <span>Students</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class='bx bxs-cog'></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="menu-item logout">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <label for="menu-toggle" class="overlay"></label>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Test Results</h1>
+                <p>{{ testname }}</p>
+            </div>
+            <a href="#" class="add-btn">
+                <i class='bx bxs-download'></i>
+                Export Results
+            </a>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ students|length }}</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class='bx bxs-bar-chart-alt-2'></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ average_score }}%</h3>
+                    <p>Average Score</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class='bx bxs-trophy'></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ highest_score }}%</h3>
+                    <p>Highest Score</p>
+                </div>
+            </div>
+         
+        </div>
+
+        <!-- Results Section -->
+        <div class="section-header">
+            <h2>Student Results</h2>
+        </div>
+
+        <!-- Results Table -->
+        <div class="table-container">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Registration Number</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        {% set percentage = (student[2] / total_questions * 100) | round(2) %}
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">{{ student[0][0] }}</div>
+                                    <div class="student-details">
+                                        <div class="student-name">{{ student[0] }}</div>
+                                        <div class="student-email">{{ student[3] }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ student[1] }}</td>
+                            <td>{{ percentage }}%</td>
+                            <td>
+                                <div class="status-badge {% if percentage >= 50 %}active{% else %}inactive{% endif %}">
+                                    {% if percentage >= 33 %}Passed{% else %}Failed{% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    {{ student[2] }} / {{ total_questions }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class='bx bxs-inbox'></i>
+                                    </div>
+                                    <h3>No Results Available</h3>
+                                    <p>There are no student results for this test yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Simple JS for hover and sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const overlay = document.querySelector('.overlay');
+            
+            overlay.addEventListener('click', function() {
+                menuToggle.checked = false;
+            });
+
+            const tableRows = document.querySelectorAll('.results-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

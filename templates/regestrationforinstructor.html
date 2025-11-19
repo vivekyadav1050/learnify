@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructor Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styeforregrestationforstudent.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <div class="logo">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span>Learnify</span>
+        </div>
+        <h1>Instructor Registration</h1>
+        <p>Create your instructor account to get started</p>
+      </div>
+
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <script>
+            {% for category, message in messages %}
+              alert("{{ message }}");
+            {% endfor %}
+          </script>
+        {% endif %}
+      {% endwith %}
+
+      <div class="form-container">
+        <form action="/regrestrationforinstructor" method="post">
+          <div class="input-group">
+            <label for="instructor-name">Full Name</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input type="text" id="instructor-name" name="name" placeholder="Your Name" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="instructor-enroll">Enrollment ID</label>
+            <div class="input-with-icon">
+              <i class="fas fa-id-card"></i>
+              <input type="text" id="instructor-enroll" name="enroll_id" placeholder="Your Enrollment ID" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="instructor-email">Email</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="instructor-email" name="email" placeholder="Your Email" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label for="instructor-password">Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="instructor-password" name="password" placeholder="Choose Password" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="instructor-confirm-password">Confirm Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="instructor-confirm-password" name="confirm_password" placeholder="Confirm Password" required>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span>Register as Instructor</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <p>Want to register as a student? <a href="/regrestrationforstudent">Click here</a></p>
+          <p>Already have an account? <a href="/">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section Subjects</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor_section_dashboardstyle.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+  <!-- Menu toggle -->
+  <input type="checkbox" id="menu-toggle" />
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <label for="menu-toggle" class="back-btn">
+        <i class="fas fa-times"></i> Close
+      </label>
+    </div>
+    <div class="sidebar-links">
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-user-edit"></i> Edit Profile
+      </a>
+      <a href="{{ url_for('instructor_dashboard')}}" class="sidebar-link">
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-info-circle"></i> About Us
+      </a>
+      <a href="/logout" class="sidebar-link logout-link">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Section: {{ section_name }}</h1>
+          <p>Manage Subjects</p>
+        </div>
+      </div>
+      <label for="menu-toggle" class="menu-icon">
+        <i class="fas fa-bars"></i>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="page-header">
+      <div class="header-text">
+        <h2>Subjects in {{ section_name }}</h2>
+        <p>Manage and organize your teaching subjects</p>
+      </div>
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ subjects|length }}</span>
+            <span class="stat-label">Subjects</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">0</span>
+            <span class="stat-label">Total Questions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <a href="{{ url_for('addsubjectinstructor', section_id=section_id, section_name=section_name) }}" class="add-btn">
+        <i class="fas fa-plus"></i> Add New Subject
+      </a>
+      <div class="view-controls">
+        <button class="view-btn active" data-view="grid">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-btn" data-view="list">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-grid" id="section-view">
+      {% if subjects %}
+        {% for subject in subjects %}
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="section-actions">
+                <button class="action-btn">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+            </div>
+            <div class="section-body">
+              <h3 class="section-title">{{ subject[1] }}</h3>
+              <p class="section-description">Manage questions and content for this subject</p>
+              
+              <div class="section-stats">
+                <div class="stat-item">
+                  <i class="fas fa-question-circle"></i>
+                  <span>{{ [5, 8, 12, 15, 20] | random }} Questions</span>
+                </div>
+                <div class="stat-item">
+                  <i class="fas fa-clock"></i>
+                  <span>{{ [2, 3, 4, 5] | random }} Hours Content</span>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer">
+              <div class="section-meta">
+                <span class="meta-item">
+                  <i class="fas fa-calendar"></i>
+                  Last updated {{ ['today', 'yesterday', '2 days ago', '1 week ago'] | random }}
+                </span>
+              </div>
+              <a href="{{ url_for('teacher_view_question', subject_id=subject[0], section_name=section_name, section_id=section_id) }}" 
+                 class="manage-btn">
+                Manage <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-sections">
+          <div class="no-sections-icon">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <h3>No Subjects Found</h3>
+          <p>You haven't created any subjects in this section yet. Start by adding your first subject.</p>
+          <a href="{{ url_for('addsubjectinstructor', section_id=section_id, section_name=section_name) }}" class="create-btn">
+            <i class="fas fa-plus"></i> Create First Subject
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+  <!-- Flash Messages -->
+  <script>
+    // Close sidebar on mobile after click
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('menu-toggle').checked = false;
+        }
+      });
+    });
+
+    // View controls
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const view = this.dataset.view;
+        const container = document.getElementById('section-view');
+        container.className = `section-${view}`;
+      });
+    });
+
+    // Action buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Add dropdown menu functionality here
+        alert('Subject options menu');
+      });
+    });
+
+    // Flash messages
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          setTimeout(() => {
+            showNotification("{{ message }}", "{{ category }}");
+          }, 500);
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <div class="notification-content">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+          <span>${message}</span>
+        </div>
+        <button class="notification-close">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Show notification
+      setTimeout(() => notification.classList.add('show'), 100);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 5000);
+      
+      // Close button
+      notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Learnify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/aboutus.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+        
+      <nav class="navbar">
+        <a href="/" class="logo">
+            
+
+          <span>Learnify</span>
+        </a>
+
+        
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/about"> Us</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>About Learnify</h1>
+      <p>We're on a mission to revolutionize online education through innovative technology and engaging learning experiences.</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h3>Our Story</h3>
+          <p>Learnify was founded in 2023 by a team of passionate educators and technologists who recognized the need for more engaging, interactive online learning platforms.</p>
+          <p>We believe that education should be accessible, personalized, and inspiring. Our platform combines cutting-edge technology with proven pedagogical approaches to create learning experiences that truly make a difference.</p>
+          <p>Today, Learnify serves thousands of students and instructors worldwide, helping them achieve their educational goals through our innovative platform.</p>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Learnify Team">
+          <div class="floating-card card-1">
+            <i class="fas fa-rocket"></i>
+            <h4>Innovation</h4>
+            <p>Constantly evolving our platform</p>
+          </div>
+          <div class="floating-card card-2">
+            <i class="fas fa-graduation-cap"></i>
+            <h4>Education</h4>
+            <p>Learning at its core</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Meet Our Team</h2>
+        <p>The passionate individuals behind Learnify's success</p>
+      </div>
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-image"><i class="fas fa-user"></i></div>
+          <div class="member-info">
+            <h3>Alex Johnson</h3>
+            <div class="member-role">Founder & CEO</div>
+            <p class="member-bio">Alex is an experienced educator with over 10 years in the ed-tech industry, passionate about making quality education accessible to all.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-member">
+          <div class="member-image"><i class="fas fa-user"></i></div>
+          <div class="member-info">
+            <h3>Sarah Williams</h3>
+            <div class="member-role">CTO</div>
+            <p class="member-bio">Sarah leads our technical team with expertise in AI and machine learning, driving the innovation behind our adaptive learning algorithms.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-member">
+          <div class="member-image"><i class="fas fa-user"></i></div>
+          <div class="member-info">
+            <h3>Michael Chen</h3>
+            <div class="member-role">Head of Product</div>
+            <p class="member-bio">Michael combines his background in education and UX design to create intuitive learning experiences that students love.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-member">
+          <div class="member-image"><i class="fas fa-user"></i></div>
+          <div class="member-info">
+            <h3>Emily Rodriguez</h3>
+            <div class="member-role">Lead Instructor</div>
+            <p class="member-bio">Emily brings her 8 years of teaching experience to develop curriculum that is both engaging and effective for diverse learners.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="mission-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Mission & Values</h2>
+        <p>What drives us every day</p>
+      </div>
+      <div class="mission-grid">
+        <div class="mission-card">
+          <div class="mission-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Quality Education</h3>
+          <p>We're committed to providing high-quality, accessible education to learners worldwide, regardless of their background or location.</p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3>Innovation</h3>
+          <p>We continuously explore new technologies and teaching methods to enhance the learning experience and improve outcomes.</p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon"><i class="fas fa-users"></i></div>
+          <h3>Community</h3>
+          <p>We believe in the power of community and collaboration to foster deeper learning and create meaningful connections.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>Learnify</h3>
+          <p>Transforming education through technology and innovation.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/courses">Courses</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Connect With Us</h3>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Learnify. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const teamMembers = document.querySelectorAll('.team-member');
+      const missionCards = document.querySelectorAll('.mission-card');
+      const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      teamMembers.forEach(member => {
+        member.style.opacity = '0';
+        member.style.transform = 'translateY(20px)';
+        member.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(member);
+      });
+
+      missionCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(card);
+      });
+    });
+  </script>
+</body>
+</html>

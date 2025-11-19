@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Leaderboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard_for_studentstyle.css') }}">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Sidebar -->
+  <input type="checkbox" id="menu-toggle">
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <label for="menu-toggle" class="back-btn">
+        <i class='bx bx-x'></i>
+        <span>Close</span>
+      </label>
+    </div>
+    <div class="sidebar-links">
+      <a href="#" class="sidebar-link">
+        <i class='bx bx-dashboard'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="sidebar-link">
+        <i class='bx bx-book'></i>
+        <span>Subjects</span>
+      </a>
+      <a href="#" class="sidebar-link active">
+        <i class='bx bx-trophy'></i>
+        <span>Leaderboard</span>
+      </a>
+      <a href="/logout" class="sidebar-link logout-link">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i class='bx bx-trophy'></i>
+        </div>
+        <div class="logo-text">
+          <h1>Performance Leaderboard</h1>
+          <p>Track your progress and compete</p>
+        </div>
+      </div>
+      <label for="menu-toggle" class="menu-icon">
+        <i class='bx bx-menu'></i>
+      </label>
+    </div>
+  </header>
+
+  <!-- Leaderboard Container -->
+  <div class="container">
+    <div class="leaderboard-header">
+      <div class="header-text">
+        <h2>🎓 Best Performers</h2>
+        <p>See how you rank among your peers</p>
+      </div>
+      <div class="stats-info">
+        <div class="stat-item">
+          <span class="stat-value">{{ leaderboard|length }}</span>
+          <span class="stat-label">Total Students</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔍 Search Box -->
+    <div class="search-box">
+      <div class="search-container">
+        <i class='bx bx-search'></i>
+        <input type="text" id="searchInput" placeholder="Search student by name...">
+      </div>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="leaderboard-card">
+      <table class="leaderboard-table" id="leaderboardTable">
+        <thead>
+          <tr>
+            <th class="rank-header">Rank</th>
+            <th class="student-header">Student</th>
+            <th class="score-header">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set current_rank = 0 %}
+          {% set prev_score = None %}
+          {% for student in leaderboard %}
+            {% if student[2] != prev_score %}
+              {% set current_rank = loop.index %}
+            {% endif %}
+            <tr {% if student[0] == current_student_id %} class="highlight" {% endif %}>
+              <td class="rank-cell {% if current_rank == 1 %}gold{% elif current_rank == 2 %}silver{% elif current_rank == 3 %}bronze{% endif %}">
+                <div class="rank-content">
+                  {% if current_rank <= 3 %}
+                    <i class='bx bx-medal rank-icon'></i>
+                  {% endif %}
+                  <span class="rank-number">#{{ current_rank }}</span>
+                </div>
+              </td>
+              <td class="student-cell">
+                <div class="student-info">
+                  <div class="student-avatar">
+                    <i class='bx bx-user'></i>
+                  </div>
+                  <span class="student-name">{{ student[1] }}</span>
+                </div>
+              </td>
+              <td class="score-cell">
+                <div class="score-display">
+                  <span class="score-value">{{ student[2] }}</span>
+                  <i class='bx bx-star score-icon'></i>
+                </div>
+              </td>
+            </tr>
+            {% set prev_score = student[2] %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if current_student_id %}
+    <div class="current-user-card">
+      <div class="user-rank">
+        <span class="rank-label">Your Rank</span>
+        <span class="rank-value">
+          {% set user_rank = 0 %}
+          {% set prev_score = None %}
+          {% for student in leaderboard %}
+            {% if student[2] != prev_score %}
+              {% set user_rank = loop.index %}
+            {% endif %}
+            {% if student[0] == current_student_id %}
+              #{{ user_rank }}
+            {% endif %}
+            {% set prev_score = student[2] %}
+          {% endfor %}
+        </span>
+      </div>
+      <div class="user-score">
+        <span class="score-label">Your Score</span>
+        <span class="score-value">
+          {% for student in leaderboard %}
+            {% if student[0] == current_student_id %}
+              {{ student[2] }}
+            {% endif %}
+          {% endfor %}
+        </span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Search Filter Script -->
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+      let filter = this.value.toLowerCase();
+      let rows = document.querySelectorAll("#leaderboardTable tbody tr");
+
+      rows.forEach(row => {
+        let studentName = row.cells[1].textContent.toLowerCase();
+        row.style.display = studentName.includes(filter) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

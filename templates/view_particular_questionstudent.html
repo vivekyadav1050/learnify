@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ q_name }} - Solution</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/view_particular_questionstudent_style.css')}}">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+      <svg xmlns="http://www.w3.org/2000/svg" width="35" height="30" fill="currentColor" class="bi bi-leaf-fill" viewBox="0 0 16 16">
+  <path d="M1.4 1.7c.217.289.65.84 1.725 1.274 1.093.44 2.885.774 5.834.528 2.02-.168 3.431.51 4.326 1.556C14.161 6.082 14.5 7.41 14.5 8.5q0 .344-.027.734C13.387 8.252 11.877 7.76 10.39 7.5c-2.016-.288-4.188-.445-5.59-2.045-.142-.162-.402-.102-.379.112.108.985 1.104 1.82 1.844 2.308 2.37 1.566 5.772-.118 7.6 3.071.505.8 1.374 2.7 1.75 4.292.07.298-.066.611-.354.715a.7.7 0 0 1-.161.042 1 1 0 0 1-1.08-.794c-.13-.97-.396-1.913-.868-2.77C12.173 13.386 10.565 14 8 14c-1.854 0-3.32-.544-4.45-1.435-1.124-.887-1.889-2.095-2.39-3.383-1-2.562-1-5.536-.65-7.28L.73.806z"/>
+</svg>
+        <div class="logo-text">
+          <h1>Learnify</h1>
+          <p> Solution</p>
+        </div>
+      </div>
+      <div class="user-info">
+        <span>{{ subject_name }} - {{ section_name }}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Question Header -->
+    <section class="question-header card">
+      <div class="question-main">
+        <div class="question-title-section">
+          <h2>{{ q_name }}</h2>
+          <div class="question-meta">
+            <span class="difficulty-badge {{ difficulty|lower if difficulty else 'medium' }}">
+              <i class='bx bx-trending-up'></i>
+              {{ difficulty if difficulty else 'Medium' }}
+            </span>
+            <span class="question-id">
+              <i class='bx bx-hash'></i>
+              ID: {{ q_id }}
+            </span>
+          </div>
+        </div>
+        {% if q_link %}
+        <a href="{{ q_link }}" target="_blank" class="solve-btn">
+          <i class='bx bx-link-external'></i>
+          <span>View Reference</span>
+        </a>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Teacher's Solution -->
+    <section class="solution-section card">
+      <div class="section-header">
+        <div class="section-title">
+          <i class='bx bx-book-content'></i>
+          <h3>Solution</h3>
+        </div>
+        <div class="solution-meta">
+          <span class="time-estimate">
+            <i class='bx bx-time'></i>
+            15 min read
+          </span>
+        </div>
+      </div>
+      
+      <div class="code-container">
+        <div class="code-header">
+          <span class="code-language">
+            <i class='bx bx-code-block'></i>
+          </span>
+          <button class="copy-btn" onclick="copyCode()">
+            <i class='bx bx-copy'></i>
+            Copy
+          </button>
+        </div>
+        <pre><code class="language-python">{{ q_notes }}</code></pre>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="actions-section">
+      <a href="{{ url_for('view_question_for_student', section_name=section_name,subject_id=subject_id,subject_name=subject_name) }}" class="back-btn">
+        <i class='bx bx-arrow-back'></i>
+        Back to Questions
+      </a>
+      
+      <div class="complete-section">
+        <a href="{{ url_for('mark_as_complete', q_id=q_id, subject_id=subject_id, subject_name=subject_name, section_name=section_name) }}" 
+           class="complete-btn disabled"
+           id="completeBtn">
+          <i class='bx bx-check-circle'></i>
+          Mark as Complete
+        </a>
+        <div class="timer-indicator" id="timerIndicator">
+          <div class="timer-content">
+            <i class='bx bx-time-five'></i>
+            <span>Available in: <span id="countdown">15</span>s</span>
+          </div>
+          <div class="timer-progress">
+            <div class="timer-progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    window.onload = function() {
+      const btn = document.getElementById("completeBtn");
+      const progressBar = document.getElementById("progressBar");
+      const countdownElement = document.getElementById("countdown");
+      const timerIndicator = document.getElementById("timerIndicator");
+      
+      let timeLeft = 15;
+      
+      // Start countdown and progress bar
+      const countdown = setInterval(() => {
+        timeLeft--;
+        countdownElement.textContent = timeLeft;
+        progressBar.style.width = `${((15 - timeLeft) / 15) * 100}%`;
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          btn.classList.remove("disabled");
+          timerIndicator.innerHTML = `
+            <div class="timer-content ready">
+              <i class='bx bx-check-shield'></i>
+              <span style="color:var(--success)">Ready to mark as complete!</span>
+            </div>
+          `;
+        }
+      }, 1000);
+    };
+
+    function copyCode() {
+      const codeElement = document.querySelector('code');
+      const textArea = document.createElement('textarea');
+      textArea.value = codeElement.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      // Show copied feedback
+      const copyBtn = document.querySelector('.copy-btn');
+      const originalHtml = copyBtn.innerHTML;
+      copyBtn.innerHTML = '<i class="bx bx-check"></i>Copied!';
+      copyBtn.style.background = 'var(--success)';
+      
+      setTimeout(() => {
+        copyBtn.innerHTML = originalHtml;
+        copyBtn.style.background = '';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

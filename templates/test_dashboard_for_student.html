@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Tests - {{ subject_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/test_dashboard_for_student_style.css') }}">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Sidebar Toggle -->
+  <input type="checkbox" id="menu-toggle">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <label for="menu-toggle" class="close-menu">
+        <i class='bx bx-x'></i>
+      </label>
+    </div>
+
+    <div class="sidebar-menu">
+      <a href="#" class="menu-item">
+        <i class='bx bx-home'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class='bx bx-user'></i>
+        <span>Edit Profile</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class='bx bx-info-circle'></i>
+        <span>About Us</span>
+      </a>
+      <a href="/logout" class="menu-item logout">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Overlay -->
+  <label for="menu-toggle" class="overlay"></label>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <i class='bx bx-book-content'></i>
+        <span>{{ subject_name }}</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <label for="menu-toggle" class="menu-icon">
+        <i class='bx bx-menu'></i>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <div class="page-header">
+      <div class="page-title">
+        <h1><i class='bx bx-test-tube'></i> Available Tests</h1>
+        <p>Here are all the tests available for {{ subject_name }}</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class='bx bx-file'></i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ tests|length if tests else 0 }}</h3>
+          <p>Total Tests</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Grid -->
+    <div class="section-header">
+      <h2>All Tests</h2>
+    </div>
+
+    <div class="test-grid">
+      {% if tests %}
+        {% for test in tests %}
+          {% set test_id = test[0] %}
+          {% set test_name = test[1] %}
+          {% set start_time = test[4] %}
+          {% set end_time = test[5] %}
+          {% set duration = test[6] %}
+          {% set status = test[7] %}
+
+          <div class="test-card">
+            <div class="test-header">
+              <div class="test-icon">
+                <i class='bx bx-file'></i>
+              </div>
+              <div class="test-status">
+                {% if status == 'Active' %}
+                  <span class="status-badge active">Active</span>
+                {% elif status == 'Not Started' %}
+                  <span class="status-badge not-started">Not Started</span>
+                {% else %}
+                  <span class="status-badge completed">Completed</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="test-info">
+              <h3>{{ test_name }}</h3>
+              <div class="test-details">
+                <div class="detail-item">
+                  <i class='bx bx-time-five'></i>
+                  <div>
+                    <span class="detail-label">Start</span>
+                    <span class="detail-value">{{ start_time.strftime('%Y-%m-%d %H:%M') if start_time else 'N/A' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <i class='bx bx-timer'></i>
+                  <div>
+                    <span class="detail-label">End</span>
+                    <span class="detail-value">{{ end_time.strftime('%Y-%m-%d %H:%M') if end_time else 'N/A' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <i class='bx bx-stopwatch'></i>
+                  <div>
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value">{{ duration }} minutes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <a href="#" class="btn-action btn-view">
+                <i class='bx bx-show'></i>
+                <span>View Details</span>
+              </a>
+
+              {% if status == 'Active' %}
+                <a href="{{ url_for('test_start_student',test_id=test_id,subject_id=subject_id )}}" class="btn-action btn-edit">
+
+                  <i class='bx bx-play-circle'></i>
+                  <span>Attempt Test</span>
+                </a>
+              {% elif status == 'Not Started' %}
+                <a href="#" class="btn-action btn-disabled" onclick="return false;">
+                  <i class='bx bx-time'></i>
+                  <span>Not Started Yet</span>
+                </a>
+              {% else %}
+                <a href="#" class="btn-action btn-completed" onclick="return false;">
+                  <i class='bx bx-check-circle'></i>
+                  <span>Completed</span>
+                </a>
+              {% endif %}
+
+              <a href="/view_result/{{ test_id }}" class="btn-action btn-result">
+                <i class='bx bx-bar-chart'></i>
+                <span>View Result</span>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class='bx bx-file-blank'></i>
+          </div>
+          <h3>No tests available</h3>
+          <p>Your instructor hasn’t added any tests for this subject yet.</p>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+</body>
+</html>

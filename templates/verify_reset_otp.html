@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verify OTP • Algotrack</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/verify_reset_otpstyle.css') }}">
+</head>
+<body>
+  <main class="container">
+    <section class="card verify-card" aria-labelledby="verify-title">
+      <header class="brand">
+        <div class="logo" aria-hidden="true">✔</div>
+        <h1 id="verify-title">Verify your account</h1>
+        <p class="muted">
+          Enter the 6-digit code sent to <strong>{{ email }}</strong>
+        </p>
+      </header>
+
+      <!-- Flash messages -->
+        <script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        alert("{{ message }}");
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</script>
+
+
+      <!-- OTP Verification Form -->
+      <form class="verify-form" action="{{ url_for('verify_reset_otp') }}" method="POST" autocomplete="one-time-code" novalidate>
+        <label for="otp" class="sr-only">One-time code (6 digits)</label>
+        <input
+          id="otp"
+          name="otp"
+          class="otp-input"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          placeholder="● ● ● ● ● ●"
+          aria-describedby="code-help"
+          required
+        />
+
+        <div id="code-help" class="muted help-text">Type or paste the 6-digit code. No spaces.</div>
+
+        <button type="submit" class="btn">Verify</button>
+
+        <div class="helper">
+          <div class="resend">
+            <span class="muted">Didn't receive it?</span>
+          </div>
+          <div class="change">
+            <a href="{{ url_for('regrestrationforstudent') }}" class="muted">Change email</a>
+          </div>
+        </div>
+      </form>
+
+   
+    </section>
+  </main>
+</body>
+</html>

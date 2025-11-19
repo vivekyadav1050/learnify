@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verify Account • Modern</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleforverify.css') }}">
+</head>
+<body>
+  <main class="container">
+    <section class="card verify-card" aria-labelledby="verify-title">
+      <header class="brand">
+        <div class="logo" aria-hidden="true">✔</div>
+        <h1 id="verify-title">Verify your account</h1>
+        <p class="muted">
+          Enter the 6-digit code sent to <strong>{{ session['student_data']['email'] }}</strong>
+        </p>
+      </header>
+      
+       {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- OTP Verification Form -->
+      <form class="verify-form" action="{{ url_for('verify') }}" method="POST" autocomplete="one-time-code" novalidate>
+        <!-- Single input -->
+        <label for="otp" class="sr-only">One-time code (6 digits)</label>
+        <input
+          id="otp"
+          name="otp"
+          class="otp-input"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          placeholder="● ● ● ● ● ●"
+          aria-describedby="code-help"
+          required
+        />
+
+        <div id="code-help" class="muted help-text">Type or paste the 6-digit code. No spaces.</div>
+
+        <button type="submit" class="btn">Verify</button>
+
+        <div class="helper">
+          <div class="resend">
+            <span class="muted">Didn't receive it?</span>
+            <a href="{{ url_for('resend_otp') }}" class="link-btn">Resend code</a>
+          </div>
+          <div class="change">
+            <a href="{{ url_for('regrestrationforstudent') }}" class="muted">Change email</a>
+          </div>
+        </div>
+      </form>
+
+      <footer class="foot muted">
+        <small>By continuing you agree to our <a href="/terms">Terms</a>.</small>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

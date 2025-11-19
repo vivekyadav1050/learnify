@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tests for {{ subject_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/testdashboard_for_instructor.css') }}">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Menu toggle -->
+  <input type="checkbox" id="menu-toggle">
+  
+  <!-- Sidebar (on the right) -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+ 
+      <label for="menu-toggle" class="close-menu">
+        <i class='bx bx-x'></i>
+      </label>
+    </div>
+
+    <div class="sidebar-menu">
+      <a href="{{ url_for('instructor_dashboard') }}" class="menu-item">
+        <i class='bx bx-home'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class='bx bx-user'></i>
+        <span>Edit Profile</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class='bx bx-info-circle'></i>
+        <span>About Us</span>
+      </a>
+      <a href="/logout" class="menu-item logout">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Overlay (dark background when menu open) -->
+  <label for="menu-toggle" class="overlay"></label>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <i class='bx bx-book-content'></i>
+        <span>Subject: {{ subject_name }}</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <label for="menu-toggle" class="menu-icon">
+        <i class='bx bx-menu'></i>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="page-header">
+      <div class="page-title">
+        <h1><i class='bx bx-test-tube'></i> Tests for {{ subject_name }}</h1>
+        <p>Manage and create tests for your students</p>
+      </div>
+      <a href="{{ url_for('add_test_instructor', subject_id=subject_id,section_name=section_name) }}" class="add-btn">
+        <i class='bx bx-plus'></i> Add New Test
+      </a>
+    </div>
+
+    <!-- Only one stat card -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class='bx bx-file'></i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ tests|length if tests else 0 }}</h3>
+          <p>Total Tests</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tests -->
+    <div class="section-header">
+      <h2>All Tests</h2>
+    </div>
+
+    <div class="test-grid">
+      {% if tests %}
+        {% for test in tests %}
+          <div class="test-card">
+            <div class="test-header">
+              <div class="test-icon">
+                <i class='bx bx-file'></i>
+              </div>
+              <div class="test-status">
+                <span class="status-badge active">Active</span>
+              </div>
+            </div>
+            <div class="test-info">
+              <h3>{{ test[1] }}</h3>
+              <div class="test-details">
+                <div class="detail-item">
+                  <i class='bx bx-time-five'></i>
+                  <div>
+                    <span class="detail-label">Start</span>
+                    <span class="detail-value">{{ test[4].strftime('%Y-%m-%d %H:%M') if test[4] else 'N/A' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <i class='bx bx-timer'></i>
+                  <div>
+                    <span class="detail-label">End</span>
+                    <span class="detail-value">{{ test[5].strftime('%Y-%m-%d %H:%M') if test[5] else 'N/A' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <i class='bx bx-stopwatch'></i>
+                  <div>
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value">{{ test[6] }} minutes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+   <div class="card-actions">
+ 
+  <a href="{{url_for('view_test_question_by_instructor',test_id=test[0],subject_id=subject_id ,section_name=section_name)}}" class="btn-action btn-view">
+    <i class='bx bx-bar-chart'></i>
+    <span>View Test</span>
+  </a>
+  <a href="{{url_for('add_questions_for_test',test_id=test[0],subject_id=subject_id,section_name=section_name)}}" class="btn-action btn-view">
+    <i class='bx bx-bar-chart'></i>
+    <span>Add Question</span>
+  </a>
+      <a href="{{url_for('test_result_instructor',test_id=test[0],subject_id=subject_id,section_name=section_name)}}" class="btn-action btn-edit">
+
+    <i class='bx bx-plus-circle'></i>
+    <span>View Result</span>
+  </a>
+  <a href="{{ url_for('delete_test', test_id=test[0], subject_id=subject_id,section_name=section_name) }}" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this test?');">
+    <i class='bx bx-trash'></i>
+    <span>Delete</span>
+  </a>
+</div>
+
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class='bx bx-file-blank'></i>
+          </div>
+          <h3>No tests found</h3>
+          <p>There are no tests for this subject yet. Create your first test to get started.</p>
+          <a href="{{ url_for('add_test_instructor', subject_id=subject_id,section_name=section_name) }}" class="add-btn">
+            <i class='bx bx-plus'></i> Create Test
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+</body>
+</html>
