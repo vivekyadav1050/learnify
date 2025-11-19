@@ -1,0 +1,204 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --muted: #bdbdbd;
+  --text: #f5f5f5;
+  --accent-start: #6a11cb; /* purple */
+  --accent-end: #2575fc;   /* blue */
+  --accent-2: #00adb5;     /* teal */
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(1000px 500px at 0% 0%, rgba(106,17,203,0.08), transparent 50%),
+    radial-gradient(900px 400px at 100% 100%, rgba(37,117,252,0.06), transparent 50%),
+    var(--bg);
+  color: var(--text);
+  padding: 2rem;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 460px;
+}
+
+/* Card */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Header */
+.brand {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.logo {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  box-shadow: 0 6px 18px rgba(58,12,116,0.35);
+  color: #fff;
+  margin: 0 auto 0.65rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.brand h1 {
+  font-size: 1.25rem;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Decorative boxes above input */
+.otp-visual {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+  pointer-events: none;
+}
+.box {
+  width: 44px;
+  height: 52px;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.08);
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: inset 0 -6px 18px rgba(0,0,0,0.6);
+}
+
+/* OTP input styled like 6 slots */
+.otp-input {
+  width: 100%;
+  max-width: 360px;
+  margin: 0.45rem auto 0;
+  display: block;
+  font-size: 1.45rem;
+  letter-spacing: 14px; /* spaces out digits */
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  caret-color: transparent; /* hide caret to simulate boxes */
+  box-shadow: inset 0 -6px 18px rgba(0,0,0,0.6);
+}
+
+.otp-input::placeholder {
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 12px;
+}
+
+.otp-input:focus {
+  box-shadow: 0 12px 30px rgba(106,17,203,0.12);
+  border: 1px solid rgba(106,17,203,0.28);
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 1rem;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent-end));
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(37,117,252,0.12);
+  transition: transform .12s, opacity .12s;
+}
+.btn:active { transform: translateY(1px); }
+
+/* Helper links */
+.helper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.9rem;
+  gap: 0.6rem;
+}
+.link-btn {
+  color: var(--accent-end);
+  text-decoration: none;
+  font-weight: 600;
+}
+.link-btn:hover { text-decoration: underline; }
+
+.change a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.change a:hover { text-decoration: underline; }
+
+/* Footer */
+.foot {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.foot a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px,1px,1px,1px);
+  white-space: nowrap;
+  border: 0; padding: 0; margin: -1px;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+  .box { width: 38px; height: 46px; font-size: 0.9rem; }
+  .otp-input { font-size: 1.1rem; letter-spacing: 11px; max-width: 300px; }
+  .card { padding: 1.25rem; }
+}
