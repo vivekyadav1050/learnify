@@ -2,8 +2,12 @@ from flask import Flask, render_template, jsonify, request, session, redirect, u
 from flask_mysqldb import MySQL
 import random
 import MySQLdb.cursors
-from datetime import datetime
 import json
+
+from datetime import datetime
+import pytz
+
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -11,6 +15,7 @@ import os
 
 
 import resend
+
 resend.api_key=os.getenv("apikeyforresend")
 
 
@@ -30,11 +35,6 @@ app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
 
 
 
-# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-# app.config['MAIL_PORT'] = 587
-# app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USERNAME'] = 'viveksinghald1050@gmail.com'   # your Gmail
-# app.config['MAIL_PASSWORD'] = 'okqf idxe sfhw bauj'          # use Gmail App Password
 
 
 
@@ -910,6 +910,9 @@ def view_test_question_by_instructor(test_id, subject_id, section_name):
         cur.close()
     return render_template("view_test_question_by_instructor.html", data=data, test_id=test_id, subject_id=subject_id, section_name=section_name)
 
+
+
+
 @app.route('/test_dashboard_for_student/<int:subject_id>', methods=['GET', 'POST'])
 def test_dashboard_for_student(subject_id):
     cur = get_cursor()
@@ -925,19 +928,31 @@ def test_dashboard_for_student(subject_id):
     finally:
         cur.close()
 
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist)
+
     tests = []
-    current_time = datetime.now()
     for row in data:
         test_id, test_name, subject_id, instructor_id, start_time, end_time, duration_minutes = row
+        
+        start_time = start_time.astimezone(ist)
+        end_time = end_time.astimezone(ist)
+
         if current_time < start_time:
             status = "Not Started"
         elif start_time <= current_time <= end_time:
             status = "Active"
         else:
             status = "Completed"
+        
         tests.append((test_id, test_name, subject_id, instructor_id, start_time, end_time, duration_minutes, status))
 
     return render_template("test_dashboard_for_student.html", subject_id=subject_id, tests=tests)
+
+
+
+
+
 
 @app.route('/test_start_student/<int:test_id>/<int:subject_id>', methods=['GET','POST'])
 def test_start_student(test_id, subject_id):
@@ -1112,4 +1127,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
-
