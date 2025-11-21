@@ -12,7 +12,7 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# DO NOT set your own PORT. Render provides it.
-# ENV PORT=8000   <-- Remove this
+# DO NOT set PORT manually, Render sets it automatically.
+# ENV PORT=8000   ← remove this
 
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "app:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT app:app
