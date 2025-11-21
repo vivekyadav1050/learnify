@@ -28,16 +28,11 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # -----------------------------
-# Cloud Run Defaults
+# Render Uses Dynamic $PORT
 # -----------------------------
-ENV PORT=8080
+ENV PORT=8000
 
 # -----------------------------
-# Expose Port
+# Start App with Gunicorn
 # -----------------------------
-EXPOSE 8080
-
-# -----------------------------
-# Start App (Gunicorn)
-# -----------------------------
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "app:app"]
