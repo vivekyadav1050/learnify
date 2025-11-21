@@ -1,5 +1,4 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for, flash
-from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 import random
 import MySQLdb.cursors
@@ -10,7 +9,16 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
+
+import resend
+# resend.api_key = "re_ag6Uxg2b_CniYVUGnkxvUfgcvZKBeWcT9"
+resend.api_key=os.getenv("apikeyforresend")
+
+
+
+
 app = Flask(__name__)
+
 
 
 app.secret_key = "djsofdsiofndjbngbdfklnerhbryjoweih2492304nr98tnunvhpkhrnjdibgirnrnrenivuchvchnasndssnkjvoiijfhfdhfhdsigjgdigkniojdngjgjigndjdjfghduenrjvidfjvidshguhernjiwp"
@@ -22,15 +30,29 @@ app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
 
 
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
-app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL') == 'True'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 
-mail = Mail(app)
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'viveksinghald1050@gmail.com'   # your Gmail
+# app.config['MAIL_PASSWORD'] = 'okqf idxe sfhw bauj'          # use Gmail App Password
+
+
+
+
+
 mysql = MySQL(app)
+
+
+
+
+def send_mail(to, subject, body):
+    resend.Emails.send({
+        "from": "no-reply@learnifyhub.space",
+        "to": [to],
+        "subject": subject,
+        "html": f"<p>{body}</p>"
+    })
 
 # -------------------------
 # Helpers
@@ -119,6 +141,8 @@ def loginforinstructor():
 
     return render_template("loginforinstructor.html")
 
+
+
 @app.route('/regrestrationforstudent', methods=['GET', 'POST'])
 def regrestrationforstudent():
     if request.method == "POST":
@@ -161,12 +185,14 @@ def regrestrationforstudent():
                     "year": year
                 }
 
-                # Send OTP Email
-                msg = Message('Student Registration OTP',
-                              sender=app.config['MAIL_USERNAME'],
-                              recipients=[email])
-                msg.body = f"Your OTP for student registration is {otp}"
-                mail.send(msg)
+                # Send OTP Emai
+                send_mail(
+                            email,
+                            "Welcome to Learnify – Your Registration OTP",
+                            f"Welcome to Learnify!\n\nWe're excited to have you join our learning community. To complete your registration, please use the OTP below:\n\nYour OTP: {otp}\n\nIf you need any help, we’re always here for you.\n\nHappy learning!\nTeam Learnify"
+                        )
+
+
 
                 return render_template('verifymail.html')
         finally:
@@ -193,7 +219,7 @@ def verify():
                     student_data["registration_no"],
                     student_data["name"],
                     student_data["email"],
-                    student_data["password"],  # TODO: hash in future
+                    student_data["password"], 
                     student_data["section"],
                     student_data["year"]
                 ))
@@ -220,11 +246,10 @@ def resend_otp():
 
     otp = str(random.randint(100000, 999999))
     session['otp'] = otp
-    msg = Message('Student Registration OTP (Resent)',
-                  sender=app.config['MAIL_USERNAME'],
-                  recipients=[student_data["email"]])
-    msg.body = f"Your new OTP for student registration is {otp}"
-    mail.send(msg)
+
+
+    send_mail(student_data["email"], "Student Registration OTP (Resent)", f"Your new OTP is {otp}")
+
 
     flash("A new OTP has been sent to your email.", "info")
     return redirect(url_for('verify'))
@@ -261,12 +286,8 @@ def regrestrationforinstructor():
             "email": email,
             "password": password   # TODO: hash
         }
+        send_mail(email, "Instructor OTP", f"Your OTP is {otp}")
 
-        msg = Message('Instructor Registration OTP',
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[email])
-        msg.body = f"Your OTP for Instructor Registration is {otp}"
-        mail.send(msg)
 
         flash("An OTP has been sent to your email. Please verify.", "info")
         return redirect(url_for('verify_instructor'))
@@ -325,11 +346,8 @@ def resend_otp_instructor():
 
     otp = str(random.randint(100000, 999999))
     session['otp'] = otp
-    msg = Message('Instructor Registration OTP (Resent)',
-                  sender=app.config['MAIL_USERNAME'],
-                  recipients=[instructor_data["email"]])
-    msg.body = f"Your new OTP for Instructor Registration is {otp}"
-    mail.send(msg)
+    send_mail(instructor_data["email"], "Resent Instructor OTP", f"Your OTP is {otp}")
+
 
     flash("A new OTP has been sent to your email.", "info")
     return redirect(url_for('verify_instructor'))
@@ -360,11 +378,9 @@ def forgot_password():
         session['reset_email'] = email
         session['reset_role'] = user['role']
 
-        msg = Message('Password Reset OTP',
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[email])
-        msg.body = f"Your OTP for resetting password is: {otp}"
-        mail.send(msg)
+        send_mail(email, "Password Reset OTP", f"Your OTP is {otp}")
+
+
 
         flash("OTP sent to your email!", "info")
         return redirect(url_for('verify_reset_otp'))
@@ -1097,5 +1113,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
-
-
