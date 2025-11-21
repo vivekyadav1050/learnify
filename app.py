@@ -35,6 +35,11 @@ app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
 
 
 
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'viveksinghald1050@gmail.com'   # your Gmail
+# app.config['MAIL_PASSWORD'] = 'okqf idxe sfhw bauj'          # use Gmail App Password
 
 
 
@@ -44,6 +49,19 @@ mysql = MySQL(app)
 
 
 
+
+def check_student_login():
+    if 'student_id' not in session:
+        flash("Please log in as student first.", "warning")
+        return redirect(url_for("login"))
+    return None
+
+
+def check_instructor_login():
+    if 'instructor_id' not in session:
+        flash("Please log in as instructor first.", "warning")
+        return redirect(url_for("loginforinstructor"))
+    return None
 
 def send_mail(to, subject, body):
     resend.Emails.send({
@@ -434,9 +452,9 @@ def reset_password():
 
 @app.route('/instructor_dashboard')
 def instructor_dashboard():
-    if 'instructor_id' not in session:
-        flash("Please log in first.", "danger")
-        return redirect(url_for("login"))
+    check = check_instructor_login()
+    if check: return check
+  
 
     cur = get_cursor()
     try:
@@ -455,6 +473,8 @@ def instructor_dashboard():
 
 @app.route('/add_section_instructor', methods=['GET', 'POST'])
 def add_section_instructor():
+    check = check_instructor_login()
+    if check: return check
     if request.method == "POST":
         section_name = request.form.get("section_name")
         if not section_name:
@@ -484,6 +504,8 @@ def add_section_instructor():
 
 @app.route('/particularsectionforinstructor/<int:section_id>/<string:section_name>', methods=['GET', 'POST'])
 def particularsectionforinstructor(section_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     instructor_id = session.get('instructor_id')
     if not instructor_id:
         flash("You must be logged in as an instructor to view this page.")
@@ -510,6 +532,8 @@ def particularsectionforinstructor(section_id, section_name):
 
 @app.route('/addsubjectinstructor/<int:section_id>/<string:section_name>', methods=['GET','POST'])
 def addsubjectinstructor(section_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     if request.method == 'POST':
         subject_name = request.form.get("subject_name")
         subject_name = subject_name.strip().upper()
@@ -548,6 +572,8 @@ def addsubjectinstructor(section_id, section_name):
 
 @app.route('/teacher_view_question/<int:subject_id>/<string:section_name>', methods=['GET', 'POST'])
 def teacher_view_question(subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     cursor = get_cursor(dict_cursor=True)
     try:
         # total students in section (avoid division by zero)
@@ -580,6 +606,8 @@ def teacher_view_question(subject_id, section_name):
 
 @app.route('/add_question/<int:subject_id>/<string:section_name>', methods=['POST','GET'])
 def add_question(subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     if request.method == 'POST':
         question_name = request.form.get('question_name')
         question_link = request.form.get('question_link')
@@ -601,6 +629,8 @@ def add_question(subject_id, section_name):
 
 @app.route('/editquestionbyteacher/<int:q_id>/<string:q_name>/<int:subject_id>/<string:section_name>', methods=['POST', 'GET'])
 def editquestionbyteacher(q_id, q_name, subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     if request.method == 'POST':
         new_notes = request.form.get('notes')
         cur = get_cursor()
@@ -624,6 +654,8 @@ def editquestionbyteacher(q_id, q_name, subject_id, section_name):
 
 @app.route('/deletequestion/<int:subject_id>/<string:section_name>/<int:q_id>', methods=['POST'])
 def deletequestion(subject_id, section_name, q_id):
+    check = check_instructor_login()
+    if check: return check
     cur = get_cursor()
     try:
         cur.execute("DELETE FROM Question WHERE q_id=%s", (q_id,))
@@ -636,6 +668,8 @@ def deletequestion(subject_id, section_name, q_id):
 
 @app.route('/view_subject_for_student/<string:student_name>', methods=['GET', 'POST'])
 def view_subject_for_student(student_name):
+    check = check_student_login()
+    if check: return check
     if 'student_email' not in session:
         flash("Please log in first.", "warning")
         return redirect(url_for("login"))
@@ -671,6 +705,8 @@ def view_subject_for_student(student_name):
 
 @app.route('/view_question_for_student/<string:section_name>/<int:subject_id>/<string:subject_name>', methods=['GET', 'POST'])
 def view_question_for_student(section_name, subject_id, subject_name):
+    check = check_student_login()
+    if check: return check
     student_id = session.get("student_id")
     cursor = get_cursor()
     try:
@@ -698,6 +734,8 @@ def view_question_for_student(section_name, subject_id, subject_name):
 
 @app.route('/particular_question_for_student/<int:q_id>/<int:subject_id>/<string:subject_name>/<string:section_name>', methods=['GET','POST'])
 def particular_question_for_student(q_id, subject_id, subject_name, section_name):
+    check = check_student_login()
+    if check: return check
     cursor = get_cursor()
     try:
         query = """
@@ -726,6 +764,8 @@ def particular_question_for_student(q_id, subject_id, subject_name, section_name
 
 @app.route('/mark_as_complete/<int:q_id>/<int:subject_id>/<string:section_name>/<string:subject_name>', methods=['GET', 'POST'])
 def mark_as_complete(q_id, subject_id, section_name, subject_name):
+    check = check_student_login()
+    if check: return check
     student_id = session.get("student_id")
     if not student_id:
         flash("Please login to mark question as complete.", "error")
@@ -757,6 +797,8 @@ def mark_as_complete(q_id, subject_id, section_name, subject_name):
 
 @app.route('/leaderboard_for_student<int:subject_id>', methods=['GET','POST'])
 def leaderboard_for_student(subject_id):
+    check = check_student_login()
+    if check: return check
     student_id = session.get("student_id")
     cursor = get_cursor()
     try:
@@ -785,6 +827,9 @@ def leaderboard_for_student(subject_id):
 
 @app.route('/testdashboad_for_instructor/<int:subject_id>/<string:section_name>', methods=['GET', 'POST'])
 def testdashboad_for_instructor(subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
+
     if 'instructor_id' not in session:
         flash("Please log in first.", "warning")
         return redirect(url_for('login'))
@@ -823,22 +868,37 @@ def testdashboad_for_instructor(subject_id, section_name):
         section_name=section_name
     )
 
+
+
+
 @app.route('/add_test_instructor/<int:subject_id>/<string:section_name>', methods=['GET', 'POST'])
 def add_test_instructor(subject_id, section_name):
-    if 'instructor_id' not in session:
-        flash("Please log in first.", "warning")
-        return redirect(url_for('login'))
+    check = check_instructor_login()
+    if check: return check
 
     instructor_id = session['instructor_id']
+    
     if request.method == 'POST':
         test_name = request.form.get('test_name')
-        start_time = request.form.get('start_time')
-        end_time = request.form.get('end_time')
+        start_time_str = request.form.get('start_time')
+        end_time_str = request.form.get('end_time')
         duration_minutes = request.form.get('duration_minutes')
 
-        if not all([test_name, start_time, end_time, duration_minutes]):
+        if not all([test_name, start_time_str, end_time_str, duration_minutes]):
             flash("All fields are required.", "warning")
             return redirect(url_for('add_test_instructor', subject_id=subject_id, section_name=section_name))
+
+        # -----------------------------
+        #  IST → UTC Conversion
+        # -----------------------------
+        ist = pytz.timezone('Asia/Kolkata')
+        
+        start_dt_ist = ist.localize(datetime.fromisoformat(start_time_str))
+        end_dt_ist = ist.localize(datetime.fromisoformat(end_time_str))
+
+        start_dt_utc = start_dt_ist.astimezone(pytz.utc)
+        end_dt_utc = end_dt_ist.astimezone(pytz.utc)
+        # -----------------------------
 
         cursor = get_cursor()
         try:
@@ -846,21 +906,27 @@ def add_test_instructor(subject_id, section_name):
                 INSERT INTO Test (test_name, subject_id, instructor_id, start_time, end_time, duration_minutes)
                 VALUES (%s, %s, %s, %s, %s, %s)
             """
-            values = (test_name, subject_id, instructor_id, start_time, end_time, duration_minutes)
-            cursor.execute(insert_query, values)
+            cursor.execute(insert_query, (test_name, subject_id, instructor_id, start_dt_utc, end_dt_utc, duration_minutes))
             mysql.connection.commit()
-            flash("✅ Test added successfully!", "success")
+
+            flash("Test added successfully!", "success")
             return redirect(url_for('testdashboad_for_instructor', subject_id=subject_id, section_name=section_name))
-        except Exception as e:
-            print("Error:", e)
-            flash("❌ An error occurred while adding the test. Please try again.", "danger")
+        
         finally:
             cursor.close()
 
     return render_template("add_test_instructor.html", subject_id=subject_id, section_name=section_name)
 
+
+
+
+
+
+
 @app.route('/delete_test/<int:test_id>/<int:subject_id>/<string:section_name>', methods=['GET'])
 def delete_test(test_id, subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     cur = get_cursor()
     try:
         cur.execute("DELETE FROM Test WHERE test_id=%s", (test_id,))
@@ -872,6 +938,8 @@ def delete_test(test_id, subject_id, section_name):
 
 @app.route('/add_questions_for_test/<int:test_id>/<int:subject_id>/<string:section_name>', methods=['GET','POST'])
 def add_questions_for_test(test_id, subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     if request.method == 'POST':
         question_texts = request.form.getlist('question_text[]')
         option_1s = request.form.getlist('option_1[]')
@@ -897,6 +965,8 @@ def add_questions_for_test(test_id, subject_id, section_name):
 
 @app.route('/view_test_question_by_instructor/<int:test_id>/<int:subject_id>/<string:section_name>', methods=['GET','POST'])
 def view_test_question_by_instructor(test_id, subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     cur = get_cursor()
     try:
         query = """
@@ -915,6 +985,8 @@ def view_test_question_by_instructor(test_id, subject_id, section_name):
 
 @app.route('/test_dashboard_for_student/<int:subject_id>', methods=['GET', 'POST'])
 def test_dashboard_for_student(subject_id):
+    check = check_student_login()
+    if check: return check
     cur = get_cursor()
     try:
         query = """
@@ -956,14 +1028,16 @@ def test_dashboard_for_student(subject_id):
 
 @app.route('/test_start_student/<int:test_id>/<int:subject_id>', methods=['GET','POST'])
 def test_start_student(test_id, subject_id):
+    check = check_student_login()
+    if check: return check
     return render_template("test_start_student.html", test_id=test_id, subject_id=subject_id)
 
 @app.route('/start_test_now_student/<int:test_id>/<int:subject_id>', methods=['GET', 'POST'])
 def start_test_now_student(test_id, subject_id):
+    check = check_student_login()
+    if check: return check
     student_id = session.get('student_id')
-    if not student_id:
-        flash("You must be logged in to take the test.", "warning")
-        return redirect(url_for('login'))
+
 
     cur = get_cursor()
     try:
@@ -1012,6 +1086,8 @@ def start_test_now_student(test_id, subject_id):
 
 @app.route('/submit_student_response_test/<int:test_id>/<int:subject_id>', methods=['POST'])
 def submit_student_response_test(test_id, subject_id):
+    check = check_student_login()
+    if check: return check
     cur = get_cursor()
     student_id = session.get('student_id')
     if not student_id:
@@ -1054,10 +1130,13 @@ def submit_student_response_test(test_id, subject_id):
 
 @app.route('/submit_success_page/<int:subject_id>')
 def submit_success_page(subject_id):
+
     return render_template("Submit_sucessfully.html", subject_id=subject_id)
 
 @app.route('/test_result_instructor/<int:test_id>/<int:subject_id>/<string:section_name>', methods=['GET', 'POST'])
 def test_result_instructor(test_id, subject_id, section_name):
+    check = check_instructor_login()
+    if check: return check
     cur = get_cursor()
     try:
         cur.execute("SELECT test_name FROM Test WHERE test_id = %s", (test_id,))
@@ -1128,4 +1207,3 @@ def logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
