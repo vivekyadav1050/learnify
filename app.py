@@ -11,7 +11,6 @@ import os
 
 
 import resend
-# resend.api_key = "re_ag6Uxg2b_CniYVUGnkxvUfgcvZKBeWcT9"
 resend.api_key=os.getenv("apikeyforresend")
 
 
@@ -1113,3 +1112,4 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
